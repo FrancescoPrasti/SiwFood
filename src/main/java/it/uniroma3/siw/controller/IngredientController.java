@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -154,17 +155,39 @@ public class IngredientController {
    @PostMapping("/admin/deleteIngredient/{id}")
    public String deleteIngredient(@PathVariable Long id, RedirectAttributes redirectAttributes) {
        try {
-           List<Ingredient> l = ingredientService.findByName(ingredientService.findById(id).getName());
-           for (Recipe ricetta : recipeService.findAll()) {
-                for (Ingredient ingredient : ricetta.getIngredients()) {
-                    if(ingredient.getName().equals(ingredientService.findById(id).getName())){
-                        ricetta.getIngredients().remove(ingredient);
-                    }
-                }  
+        //    List<Ingredient> l = ingredientService.findByName(ingredientService.findById(id).getName());
+        //    for (Recipe ricetta : recipeService.findAll()) {
+        //         for (Ingredient ingredient : ricetta.getIngredients()) {
+        //             if(ingredient.getName().equals(ingredientService.findById(id).getName())){
+        //                 ricetta.getIngredients().remove(ingredient);
+        //             }
+        //         }  
+        //     }
+        //    for (Ingredient  i : l) {
+        //         ingredientService.deleteIngredientById(i.getId());
+        //    }
+        String ingredientName = ingredientService.findById(id).getName();
+        List<Ingredient> ingredientList = ingredientService.findByName(ingredientName);
+        
+        // Rimuovi l'ingrediente da tutte le ricette
+        for (Recipe recipe : recipeService.findAll()) {
+            // Usa un iteratore per evitare ConcurrentModificationException
+            Iterator<Ingredient> iterator = recipe.getIngredients().iterator();
+            while (iterator.hasNext()) {
+                Ingredient ingredient = iterator.next();
+                if (ingredient.getName().equals(ingredientName)) {
+                    iterator.remove();
+                }
             }
-           for (Ingredient  i : l) {
-                ingredientService.deleteIngredientById(i.getId());
-           }
+            // Aggiorna la ricetta nel database
+            recipeService.save(recipe);
+        }
+        
+        // Elimina tutti gli ingredienti trovati per nome
+        for (Ingredient ingredient : ingredientList) {
+            ingredientService.deleteIngredientById(ingredient.getId());
+        }
+
            redirectAttributes.addFlashAttribute("successMessage", "Ingrediente eliminato con successo.");
        } catch (Exception e) {
            redirectAttributes.addFlashAttribute("errorMessage", "Errore durante l'eliminazione dell'ingrediente.");

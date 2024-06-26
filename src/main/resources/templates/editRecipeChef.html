@@ -435,11 +435,11 @@
 
             div.innerHTML = `
                 <input type="hidden" name="ingredients[${ingredientCount}].id">
-                <label for="ingredientName${ingredientCount}" class="form-label">Nome Ingrediente:</label>
+                <label for="ingredientName${ingredientCount}" class="form-label">Nome:</label>
                 <input type="text" id="ingredientName${ingredientCount}" name="ingredients[${ingredientCount}].name" class="form-control" required>
-                <label for="ingredientQuantity${ingredientCount}" class="form-label">Quantità:</label>
+                <label for="ingredientQuantity${ingredientCount}" class="form-label">Quantita':</label>
                 <input type="number" id="ingredientQuantity${ingredientCount}" name="ingredients[${ingredientCount}].quantity" class="form-control" required>
-                <label for="ingredientUnitOfMeasure${ingredientCount}" class="form-label">Unità di Misura:</label>
+                <label for="ingredientUnitOfMeasure${ingredientCount}" class="form-label">Unita' di misura:</label>
                 <input type="text" id="ingredientUnitOfMeasure${ingredientCount}" name="ingredients[${ingredientCount}].unitOfMeasure" class="form-control" required>
                 <button type="button" onclick="removeIngredient(this)" class="btn btn-danger mt-2">Rimuovi</button>
             `;

@@ -472,14 +472,14 @@
             </button>
         </div>
         <div class="mt-4">
-            <h2 class="mb-3" th:text="${recipe.name}">Nome Ricetta</h2>
+            <h2 class="form-label" th:text="${recipe.name}">Nome Ricetta</h2>
             <h4 class="mb-3">Chef: <span th:text="${recipe.chef.name} + ' ' + ${recipe.chef.surname}">Nome Chef</span></h4>
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-2">Tempo di Preparazione: <span class="recipe-campi" th:text="${recipe.prepTime} + ' minuti'">Prep Time</span></p>
-                    <p class="mb-2">Porzioni: <span class="recipe-campi" th:text="${recipe.servings} + ' persone'">Servings</span></p>
-                    <p class="mb-2">Difficoltà: <span class="recipe-campi" th:text="${recipe.difficulty}">Difficulty</span></p>
-                    <p class="mb-2">Categoria: <span class="recipe-campi" th:text="${recipe.category}">Category</span></p>
+                    <p class="form-label">Tempo di preparazione: <span class="recipe-campi" th:text="${recipe.prepTime} + ' minuti'">Tempo di preparazione</span></p>
+                    <p class="form-label">Porzioni: <span class="recipe-campi" th:text="${recipe.servings} + ' persone'">Porzioni</span></p>
+                    <p class="form-label">Difficolta': <span class="recipe-campi" th:text="${recipe.difficulty}">Difficolta'</span></p>
+                    <p class="form-label">Categoria: <span class="recipe-campi" th:text="${recipe.category}">Categoria</span></p>
                 </div>
                 <div class="col-md-6">
                     <div class="description-container">
@@ -518,20 +518,20 @@
                                 </button>
                             </div>
                             <div class="ingredient-overlay">
-                                <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>
+                                <span class="form-label" th:text="${ingredient.name}">Nome Ingrediente</span>
                                 <!-- <span th:text="${ingredient.quantity}">Quantità</span>
                                 <span th:text="${ingredient.unitOfMeasure}">Unità</span> -->
                             </div>
                         </div>
                         <div th:if="${ingredient.listaImmagini == null || ingredient.listaImmagini.isEmpty()}" class="card-body text-center">
                             <p class="card-text text-danger">Questo ingrediente non ha foto</p>
-                            <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>
+                            <span class="form-label" th:text="${ingredient.name}">Nome Ingrediente</span>
                         </div>
                         <div class="card-body">
                             <p class="card-text">
                                 <!-- <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>: -->
-                                <span th:text="'Quantità = ' + ${ingredient.quantity}">Quantità</span>
-                                <span th:text="${ingredient.unitOfMeasure}">Unità di Misura</span>
+                                <span th:text="'Quantita = ' + ${ingredient.quantity}">Quantita'</span>
+                                <span th:text="${ingredient.unitOfMeasure}">Unita' di Misura</span>
                             </p>
                         </div>
                     </div>

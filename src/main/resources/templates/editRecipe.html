@@ -429,7 +429,7 @@
                     <input type="text" th:id="'ingredientName_' + ${iterStat.index}" th:name="'ingredients[' + ${iterStat.index} + '].name'" th:value="${ingredient.name}" class="form-control" required>
                     <label th:for="'ingredientQuantity_' + ${iterStat.index}" class="form-label">Quantita':</label>
                     <input type="number" th:id="'ingredientQuantity_' + ${iterStat.index}" th:name="'ingredients[' + ${iterStat.index} + '].quantity'" th:value="${ingredient.quantity}" class="form-control" required>
-                    <label th:for="'ingredientUnitOfMeasure_' + ${iterStat.index}" class="form-label">Unita' di Misura:</label>
+                    <label th:for="'ingredientUnitOfMeasure_' + ${iterStat.index}" class="form-label">Unita' di ,isura:</label>
                     <input type="text" th:id="'ingredientUnitOfMeasure_' + ${iterStat.index}" th:name="'ingredients[' + ${iterStat.index} + '].unitOfMeasure'" th:value="${ingredient.unitOfMeasure}" class="form-control" required>
                     <button type="button" onclick="removeIngredient(this)" class="btn btn-danger mt-2">Rimuovi</button>
                 </div>
@@ -452,11 +452,11 @@
 
             div.innerHTML = `
                 <input type="hidden" name="ingredients[${ingredientCount}].id">
-                <label for="ingredientName${ingredientCount}" class="form-label">Nome Ingrediente:</label>
+                <label for="ingredientName${ingredientCount}" class="form-label">Nome:</label>
                 <input type="text" id="ingredientName${ingredientCount}" name="ingredients[${ingredientCount}].name" class="form-control" required>
-                <label for="ingredientQuantity${ingredientCount}" class="form-label">Quantità:</label>
+                <label for="ingredientQuantity${ingredientCount}" class="form-label">Quantita':</label>
                 <input type="number" id="ingredientQuantity${ingredientCount}" name="ingredients[${ingredientCount}].quantity" class="form-control" required>
-                <label for="ingredientUnitOfMeasure${ingredientCount}" class="form-label">Unità di Misura:</label>
+                <label for="ingredientUnitOfMeasure${ingredientCount}" class="form-label">Unita' di misura:</label>
                 <input type="text" id="ingredientUnitOfMeasure${ingredientCount}" name="ingredients[${ingredientCount}].unitOfMeasure" class="form-control" required>
                 <button type="button" onclick="removeIngredient(this)" class="btn btn-danger mt-2">Rimuovi</button>
             `;

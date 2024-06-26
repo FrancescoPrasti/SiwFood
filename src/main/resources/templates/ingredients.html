@@ -193,6 +193,9 @@
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
+                        <div th:if="${ingredient.listaImmagini == null || ingredient.listaImmagini.isEmpty()}" class="card-body text-center">
+                            <p class="card-text text-danger">Questo ingrediente non ha foto</p>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title text-center" th:text="${ingredient.name}">Nome Ingrediente</h5>
                             <div class="text-center">
