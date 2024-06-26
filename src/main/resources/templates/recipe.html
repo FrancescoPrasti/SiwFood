@@ -1,0 +1,604 @@
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricetta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: rgb(222, 216, 158);
+        }
+        .recipe-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        .ingredient-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .ingredient-item {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .ingredient-card {
+            width: calc(50% - 15px);
+            margin-bottom: 15px;
+        }
+        .ingredient-card .card-body {
+            padding: 10px;
+        }
+        .ingredient-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .ingredient-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .description-container {
+            text-align: center;
+            margin-top: -45px;
+            word-wrap: break-word; /* Assicura che il testo si spezzi e rimanga all'interno del contenitore */
+        }
+        .description-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .description-text {
+            font-size: 16px;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #000;
+            border-radius: 50%;
+        }
+        .carousel-control-prev-icon::after,
+        .carousel-control-next-icon::after {
+            color: #fff;
+            font-size: 20px;
+        }
+        .recipe-campi {
+            font-weight: lighter;
+        }
+        .review-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .review-header img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .review-stars {
+            color: #FFD700;
+            margin-right: 10px;
+        }
+        .review-content {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">SiwFood</a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/registration">Create an account</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container recipe-container">
+        <h1 class="text-center mb-4">Informazioni Ricetta</h1>
+        <div id="recipeCarousel" class="carousel slide" data-bs-ride="false">
+            <div class="carousel-inner">
+                <div th:each="base64, iterStat : ${recipe.base64}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                    <img th:src="'data:image/jpeg;base64,' + ${base64}" class="d-block w-100 recipe-image" alt="Recipe Image">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <div class="mt-4">
+            <h2 class="mb-3" th:text="${recipe.name}">Nome Ricetta</h2>
+            <h4 class="mb-3">Chef: <span th:text="${recipe.chef.name} + ' ' + ${recipe.chef.surname}">Nome Chef</span></h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2">Tempo di Preparazione: <span class="recipe-campi" th:text="${recipe.prepTime} + ' minuti'">Prep Time</span></p>
+                    <p class="mb-2">Porzioni: <span class="recipe-campi" th:text="${recipe.servings} + ' persone'">Servings</span></p>
+                    <p class="mb-2">Difficoltà: <span class="recipe-campi" th:text="${recipe.difficulty}">Difficulty</span></p>
+                    <p class="mb-2">Categoria: <span class="recipe-campi" th:text="${recipe.category}">Category</span></p>
+                </div>
+                <div class="col-md-6">
+                    <div class="description-container">
+                        <h2 class="description-title">Descrizione</h2>
+                        <p class="description-text" th:text="${recipe.description}">Descrizione della ricetta...</p>
+                    </div>
+                </div>
+            </div>
+            <h3 class="text-center mb-4">Ingredienti</h3>
+            <ul class="ingredient-list text-center mb-4">
+                <li th:each="ingredient : ${recipe.ingredients}" class="ingredient-item">
+                    <div class="card ingredient-card">
+                        <div th:if="${ingredient.listaImmagini != null && !ingredient.listaImmagini.isEmpty()}" class="position-relative">
+                            <div th:id="'ingredientCarousel_' + ${ingredient.id}" class="carousel slide" data-bs-ride="false">
+                                <div class="carousel-inner">
+                                    <div th:each="listaImmagini, iterStat : ${ingredient.listaImmagini}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                                        <img th:src="'data:image/jpeg;base64,' + ${listaImmagini}" class="d-block w-100 ingredient-image" alt="Ingredient Image">
+                                    </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" th:data-bs-target="'#ingredientCarousel_' + ${ingredient.id}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" th:data-bs-target="'#ingredientCarousel_' + ${ingredient.id}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <div class="ingredient-overlay">
+                                <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>
+                            </div>
+                        </div>
+                        <div th:if="${ingredient.listaImmagini == null || ingredient.listaImmagini.isEmpty()}" class="card-body text-center">
+                            <p class="card-text text-danger">Questo ingrediente non ha foto</p>
+                            <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <span th:text="'Quantità = ' + ${ingredient.quantity}">Quantità</span>
+                                <span th:text="${ingredient.unitOfMeasure}">Unità di Misura</span>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <th:block th:if="${role=='CHEF'}">
+        <div class="text-center mt-4">
+            <form th:action="@{'/favorite/' + ${recipe.id}}" method="post">
+                <button type="submit" class="btn btn-primary" th:text="${isFavorite} ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'">
+                    Aggiungi ai Preferiti
+                </button>
+            </form>
+        </div>
+        </th:block>
+
+        <div>
+            <h3>Recensioni</h3>
+            <div th:if="${recensioni != null && !recensioni.isEmpty()}">
+                <div th:each="rec : ${recensioni}" class="review-container">
+                    <div class="review-header">
+                        <img th:src="'data:image/jpeg;base64,' + ${rec.chef.base64}" alt="Foto Chef" style="width: 50px; height: 50px;">
+                        <h4 th:text="${rec.chef.name} + ' ' + ${rec.chef.surname}"></h4>
+                    </div>
+                    <div class="review-stars">
+                        <span th:each="star : ${#numbers.sequence(1, 5)}">
+                            <i th:class="${star} <= ${rec.valutazione} ? 'fas fa-star' : 'far fa-star'"></i>
+                        </span>
+                    </div>
+                    <div class="review-content">
+                        <p th:text="${rec.contenutoRecensione}"></p>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${(recensioni == null || recensioni.isEmpty())}">
+                <p>Nessuna recensione disponibile.</p>
+            </div>
+                <div th:if="${role=='CHEF' && recensioneChef == null}" class="mt-4">
+                    <div class="mt-4 p-4 border rounded">
+                        <h3 class="mb-3">Lascia una Recensione</h3>
+                        <form th:action="@{'/recipe/' + ${recipe.id} + '/recensione'}" method="post">
+                            <div class="mb-3">
+                                <label for="valutazione" class="form-label">Valutazione (da 1 a 5)</label>
+                                <input type="number" id="valutazione" name="valutazione" min="1" max="5" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contenutoRecensione" class="form-label">Recensione</label>
+                                <textarea id="contenutoRecensione" name="contenutoRecensione" rows="3" class="form-control" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Invia Recensione</button>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('.fa-star, .fa-star-half-alt');
+            stars.forEach(star => {
+                star.style.color = '#FFD700'; // Color of the stars
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricetta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(222, 216, 158);
+        }
+        .recipe-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 5rem !important;
+        }
+        .recipe-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        .ingredient-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .ingredient-item {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .ingredient-card {
+            width: calc(50% - 15px);
+            margin-bottom: 15px;
+        }
+        .ingredient-card .card-body {
+            padding: 10px;
+        }
+        .ingredient-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .ingredient-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        .description-container {
+            text-align: center;
+            margin-top: -45px;
+            margin-right: 11%;
+            word-wrap: break-word; /* Assicura che il testo si spezzi e rimanga all'interno del contenitore */
+        }
+        .description-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .description-text {
+            font-size: 16px;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #000;
+            border-radius: 50%;
+        }
+        .carousel-control-prev-icon::after,
+        .carousel-control-next-icon::after {
+            color: #fff;
+            font-size: 20px;
+        }
+        .recipe-campi {
+            font-weight: lighter;
+        }
+        .review-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .review-header img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .review-stars {
+            color: #FFD700;
+            margin-right: 10px;
+        }
+        .review-content {
+            font-size: 16px;
+        }
+        .form-label{
+            font-weight: bold;
+        }
+        .navbar {
+            background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(30,30,70,1) 50%, rgb(0, 0, 0) 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff !important;
+        }
+        .nav-link {
+            color: #fff !important;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #ffdd57 !important;
+        }
+        .nav-item {
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 0 5px;
+            padding: 5px 10px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .nav {
+            align-items: center;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background-color: #181717;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .preferiti{
+            margin-bottom: 3%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">SiwFood</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">
+                            <i class="fas fa-home"></i>
+                            Home
+                        </a>
+                    </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="/logout">Esci</a>
+                      </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrationChef">Crea un account</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container recipe-container">
+        <h2 class="section-title">Informazioni Ricetta</h2>
+        <div id="recipeCarousel" class="carousel slide" data-bs-ride="false">
+            <div class="carousel-inner">
+                <div th:each="base64, iterStat : ${recipe.base64}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                    <img th:src="'data:image/jpeg;base64,' + ${base64}" class="d-block w-100 recipe-image" alt="Recipe Image">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <div class="mt-4">
+            <h2 class="mb-3" th:text="${recipe.name}">Nome Ricetta</h2>
+            <h4 class="mb-3">Chef: <span th:text="${recipe.chef.name} + ' ' + ${recipe.chef.surname}">Nome Chef</span></h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2">Tempo di Preparazione: <span class="recipe-campi" th:text="${recipe.prepTime} + ' minuti'">Prep Time</span></p>
+                    <p class="mb-2">Porzioni: <span class="recipe-campi" th:text="${recipe.servings} + ' persone'">Servings</span></p>
+                    <p class="mb-2">Difficoltà: <span class="recipe-campi" th:text="${recipe.difficulty}">Difficulty</span></p>
+                    <p class="mb-2">Categoria: <span class="recipe-campi" th:text="${recipe.category}">Category</span></p>
+                </div>
+                <div class="col-md-6">
+                    <div class="description-container">
+                        <h2 class="description-title">Descrizione</h2>
+                        <p class="description-text" th:text="${recipe.description}">Descrizione della ricetta...</p>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${role=='CHEF'}">
+                    <div class="mt-4 preferiti">
+                        <form th:action="@{'/favorite/' + ${recipe.id}}" method="post">
+                            <button type="submit" class="btn btn-primary" th:text="${isFavorite} ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'">
+                                Aggiungi ai Preferiti
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <h2 class="section-title">Ingredienti</h2>
+            <ul class="ingredient-list text-center mb-4">
+                <li th:each="ingredient : ${recipe.ingredients}" class="ingredient-item">
+                    <div class="card ingredient-card">
+                        <div th:if="${ingredient.listaImmagini != null && !ingredient.listaImmagini.isEmpty()}" class="position-relative">
+                            <div th:id="'ingredientCarousel_' + ${ingredient.id}" class="carousel slide" data-bs-ride="false">
+                                <div class="carousel-inner">
+                                    <div th:each="listaImmagini, iterStat : ${ingredient.listaImmagini}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                                        <img th:src="'data:image/jpeg;base64,' + ${listaImmagini}" class="d-block w-100 ingredient-image" alt="Ingredient Image">
+                                    </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" th:data-bs-target="'#ingredientCarousel_' + ${ingredient.id}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" th:data-bs-target="'#ingredientCarousel_' + ${ingredient.id}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <div class="ingredient-overlay">
+                                <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>
+                                <!-- <span th:text="${ingredient.quantity}">Quantità</span>
+                                <span th:text="${ingredient.unitOfMeasure}">Unità</span> -->
+                            </div>
+                        </div>
+                        <div th:if="${ingredient.listaImmagini == null || ingredient.listaImmagini.isEmpty()}" class="card-body text-center">
+                            <p class="card-text text-danger">Questo ingrediente non ha foto</p>
+                            <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <!-- <span class="ingredient-name" th:text="${ingredient.name}">Nome Ingrediente</span>: -->
+                                <span th:text="'Quantità = ' + ${ingredient.quantity}">Quantità</span>
+                                <span th:text="${ingredient.unitOfMeasure}">Unità di Misura</span>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- <th:block th:if="${role=='CHEF'}">
+        <div class="text-center mt-4">
+            <form th:action="@{'/favorite/' + ${recipe.id}}" method="post">
+                <button type="submit" class="btn btn-primary" th:text="${isFavorite} ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'">
+                    Aggiungi ai Preferiti
+                </button>
+            </form>
+        </div>
+        </th:block> -->
+
+        <!-- Recensioni -->
+        <div>
+            <h2 class="section-title">Recensioni</h2>
+            <div th:if="${recensioni != null && !recensioni.isEmpty()}">
+                <div th:each="rec : ${recensioni}" class="review-container">
+                    <div class="review-header">
+                        <img th:src="'data:image/jpeg;base64,' + ${rec.chef.base64}" alt="Foto Chef" style="width: 50px; height: 50px;">
+                        <h4 th:text="${rec.chef.name} + ' ' + ${rec.chef.surname}"></h4>
+                    </div>
+                    <div class="review-stars">
+                        <span th:each="star : ${#numbers.sequence(1, 5)}">
+                            <i th:class="${star} <= ${rec.valutazione} ? 'fas fa-star' : 'far fa-star'"></i>
+                        </span>
+                    </div>
+                    <div class="review-content">
+                        <p th:text="${rec.contenutoRecensione}"></p>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${(recensioni == null || recensioni.isEmpty())}">
+                <p class="text-center">Nessuna recensione disponibile.</p>
+            </div>
+                <div th:if="${role=='CHEF' && recensioneChef == null}" class="mt-4">
+                    <div class="mt-4 p-4 border rounded">
+                        <h2 class="section-title">Lascia una Recensione</h2>
+                        <form th:action="@{'/recipe/' + ${recipe.id} + '/recensione'}" method="post">
+                            <div class="mb-3">
+                                <label for="valutazione" class="form-label">Valutazione (da 1 a 5)</label>
+                                <input type="number" id="valutazione" name="valutazione" min="1" max="5" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contenutoRecensione" class="form-label">Recensione</label>
+                                <textarea id="contenutoRecensione" name="contenutoRecensione" rows="3" class="form-control" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Invia Recensione</button>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('.fa-star, .fa-star-half-alt');
+            stars.forEach(star => {
+                star.style.color = '#FFD700'; // Color of the stars
+            });
+        });
+    </script>
+</body>
+</html>
