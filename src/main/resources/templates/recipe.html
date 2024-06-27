@@ -459,7 +459,7 @@
         <div id="recipeCarousel" class="carousel slide" data-bs-ride="false">
             <div class="carousel-inner">
                 <div th:each="base64, iterStat : ${recipe.base64}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
-                    <img th:src="'data:image/jpeg;base64,' + ${base64}" class="d-block w-100 recipe-image" alt="Recipe Image">
+                    <img th:src="'data:image/jpeg;base64,' + ${base64}" class="d-block w-100 recipe-image" alt="Questa ricetta non ha foto">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">

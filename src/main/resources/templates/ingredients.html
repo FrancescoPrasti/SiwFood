@@ -133,6 +133,19 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .form-label{
+            font-weight: bold;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #000;
+            border-radius: 50%;
+        }
+        .carousel-control-prev-icon::after,
+        .carousel-control-next-icon::after {
+            color: #fff;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -178,20 +191,22 @@
             <div class="row">
                 <div th:each="ingredient : ${ingredients}" class="col-md-4">
                     <div class="card recipe-card">
-                        <div th:id="'ingredientCarousel-' + ${ingredient.id}" class="carousel slide" data-bs-ride="false">
-                            <div class="carousel-inner">
-                                <div th:each="listaImmagini, iterStat : ${ingredient.listaImmagini}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
-                                    <img th:src="'data:image/jpeg;base64,' + ${listaImmagini}" class="d-block w-100 recipe-image" alt="Ingrediente senza foto">
+                        <div th:if="${ingredient.listaImmagini != null && !ingredient.listaImmagini.isEmpty()}" class="position-relative"></div>
+                            <div th:id="'ingredientCarousel-' + ${ingredient.id}" class="carousel slide" data-bs-ride="false">
+                                <div class="carousel-inner">
+                                    <div th:each="listaImmagini, iterStat : ${ingredient.listaImmagini}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                                        <img th:src="'data:image/jpeg;base64,' + ${listaImmagini}" class="d-block w-100 recipe-image" alt="Ingrediente senza foto">
+                                    </div>
                                 </div>
+                                <button class="carousel-control-prev" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
-                            <button class="carousel-control-prev" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
                         </div>
                         <div th:if="${ingredient.listaImmagini == null || ingredient.listaImmagini.isEmpty()}" class="card-body text-center">
                             <p class="card-text text-danger">Questo ingrediente non ha foto</p>
