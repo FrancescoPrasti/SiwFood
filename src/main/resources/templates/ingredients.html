@@ -191,18 +191,18 @@
             <div class="row">
                 <div th:each="ingredient : ${ingredients}" class="col-md-4">
                     <div class="card recipe-card">
-                        <div th:if="${ingredient.listaImmagini != null && !ingredient.listaImmagini.isEmpty()}" class="position-relative"></div>
+                        <div th:if="${ingredient.listaImmagini != null && !ingredient.listaImmagini.isEmpty()}" class="position-relative">
                             <div th:id="'ingredientCarousel-' + ${ingredient.id}" class="carousel slide" data-bs-ride="false">
                                 <div class="carousel-inner">
                                     <div th:each="listaImmagini, iterStat : ${ingredient.listaImmagini}" class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
                                         <img th:src="'data:image/jpeg;base64,' + ${listaImmagini}" class="d-block w-100 recipe-image" alt="Ingrediente senza foto">
                                     </div>
                                 </div>
-                                <button class="carousel-control-prev" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" data-bs-slide="prev">
+                                <button class="carousel-control-prev" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" th:if="${ingredient.listaImmagini.size() > 1}" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
                                 </button>
-                                <button class="carousel-control-next" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" data-bs-slide="next">
+                                <button class="carousel-control-next" type="button" th:data-bs-target="'#ingredientCarousel-' + ${ingredient.id}" th:if="${ingredient.listaImmagini.size() > 1}" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>

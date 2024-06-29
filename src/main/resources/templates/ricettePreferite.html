@@ -144,6 +144,16 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #000;
+            border-radius: 50%;
+        }
+        .carousel-control-prev-icon::after,
+        .carousel-control-next-icon::after {
+            color: #fff;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -174,6 +184,9 @@
 
     <div class="container favorite-recipes-container">
         <h2 class="section-title">Ricette Preferite</h2>
+        <div th:if="${favoriteRecipes == null || favoriteRecipes.isEmpty()}">
+            <p class="text-center">Non hai ricette preferite!</p>
+        </div>
         <div class="row">
             <div th:each="recipe : ${favoriteRecipes}" class="col-md-4">
                 <div class="card recipe-card">
@@ -183,11 +196,11 @@
                                 <img th:src="'data:image/jpeg;base64,' + ${base64}" class="d-block w-100 recipe-image" alt="Recipe Image">
                             </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel-[[${recipe.id}]]" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel-[[${recipe.id}]]" th:if="${recipe.base64.size() > 1}" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel-[[${recipe.id}]]" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel-[[${recipe.id}]]" th:if="${recipe.base64.size() > 1}" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
