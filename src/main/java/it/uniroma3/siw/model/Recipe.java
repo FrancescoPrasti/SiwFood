@@ -13,6 +13,7 @@ public class Recipe {
 
     private String name;
 
+    @Column(length = 100000000)
     private String description;
     
     private int prepTime; // Tempo di preparazione

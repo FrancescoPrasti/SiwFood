@@ -209,6 +209,9 @@
     <form th:action="@{/formNewRecipe}" method="POST" enctype="multipart/form-data">
       <h2 class="section-title">Crea una nuova Ricetta</h2>
       
+      <div class="container mt-4 d-flex flex-column align-items-center" th:if="${error}">
+        <span th:text="${error}"></span>
+      </div>
       <div class="mb-3">
         <label for="recipeName" class="form-label">Nome:</label>
         <input type="text" id="recipeName" name="name" class="form-control" required th:field="${recipe.name}">

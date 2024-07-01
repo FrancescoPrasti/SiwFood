@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.model.Ingredient;
 import it.uniroma3.siw.model.Recensione;
+import it.uniroma3.siw.controller.validator.RecipeValidator;
 import it.uniroma3.siw.model.Chef;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.Recipe;
@@ -43,6 +44,9 @@ import jakarta.validation.Valid;
 @Controller
 public class RecipeController {
     
+    @Autowired
+    private RecipeValidator recipeValidator;
+
     @Autowired
     private RecipeService recipeService;
 
@@ -196,7 +200,7 @@ public class RecipeController {
    }
 
    @PostMapping("/formNewRecipe")
-    public String addNewRecipe(@ModelAttribute Recipe recipe, @RequestParam("images") MultipartFile[] files, Model model) {
+    public String addNewRecipe(@Valid@ModelAttribute Recipe recipe, @RequestParam("images") MultipartFile[] files, Model model, BindingResult bindingResult) {
         try {
             List<Ingredient> ingredients = recipe.getIngredients();
             for (Ingredient ingredient : ingredients) {
@@ -224,6 +228,14 @@ public class RecipeController {
             }
 
             recipe.setBase64(imagePaths);
+
+            this.recipeValidator.validate(recipe, bindingResult);
+            if(bindingResult.hasErrors()){
+                model.addAttribute("error","Esiste gia' una ricetta con questo nome!");
+                model.addAttribute("recipe", new Recipe());
+                return "formNewRecipe";
+            }
+
             recipeRepository.save(recipe);
             model.addAttribute("message", "Recipe uploaded successfully!");
 
@@ -273,7 +285,7 @@ public class RecipeController {
    }
 
    @PostMapping("/admin/formNewRecipeAdmin")
-    public String addNewRecipeAdmin(@ModelAttribute Recipe recipe, @RequestParam("chef.id") Long chefId, @RequestParam("images") MultipartFile[] files, Model model) {
+    public String addNewRecipeAdmin(@Valid @ModelAttribute Recipe recipe, @RequestParam("chef.id") Long chefId, @RequestParam("images") MultipartFile[] files, Model model, BindingResult bindingResult) {
         try {
             Chef chef = chefService.findById(chefId);
             recipe.setChef(chef);
@@ -302,6 +314,15 @@ public class RecipeController {
             }
 
             recipe.setBase64(imagePaths);
+
+            this.recipeValidator.validate(recipe, bindingResult);
+            if(bindingResult.hasErrors()){
+                model.addAttribute("error","Esiste gia' una ricetta con questo nome!");
+                model.addAttribute("recipe", new Recipe());
+                model.addAttribute("chefs", this.chefService.findAll());
+                return "formNewRecipeAdmin";
+            }
+
             recipeRepository.save(recipe);
             model.addAttribute("message", "Recipe uploaded successfully!");
 
