@@ -279,7 +279,7 @@
       </div>
 
       <div class="mb-3">
-        <label for="difficulty" class="form-label">Dicciolta':</label>
+        <label for="difficulty" class="form-label">Dicciolt&#224;:</label>
         <select id="difficulty" name="difficulty" class="form-select" required th:field="${recipe.difficulty}">
           <option value="Facile">Facile</option>
           <option value="Media">Medio</option>
@@ -298,7 +298,7 @@
       </div>
 
       <div class="mb-3">
-        <label for="images" class="form-label">Aggiungi una o piu' foto:</label>
+        <label for="images" class="form-label">Aggiungi una o pi&#249; foto:</label>
         <input type="file" id="images" name="images" class="form-control" multiple>
       </div>
 
@@ -340,9 +340,9 @@
       div.innerHTML = `
         <label for="ingredientName${ingredientCount}" class="form-label">Nome:</label>
         <input type="text" id="ingredientName${ingredientCount}" name="ingredients[${ingredientCount}].name" class="form-control" required>
-        <label for="ingredientQuantity${ingredientCount}" class="form-label">Quantita':</label>
+        <label for="ingredientQuantity${ingredientCount}" class="form-label">Quantit&#224;:</label>
         <input type="number" id="ingredientQuantity${ingredientCount}" name="ingredients[${ingredientCount}].quantity" class="form-control" required>
-        <label for="ingredientUnitOfMeasure${ingredientCount}" class="form-label">Unita' di misura:</label>
+        <label for="ingredientUnitOfMeasure${ingredientCount}" class="form-label">Unit&#224; di misura:</label>
         <input type="text" id="ingredientUnitOfMeasure${ingredientCount}" name="ingredients[${ingredientCount}].unitOfMeasure" class="form-control" required>
         <button type="button" onclick="removeIngredient(this)" class="btn btn-danger mt-2">Rimuovi</button>
       `;

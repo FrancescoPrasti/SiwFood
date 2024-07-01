@@ -239,10 +239,15 @@
                         <div th:if="${ingredient.listaImmagini == null || ingredient.listaImmagini.isEmpty()}" class="card-body text-center">
                             <p class="card-text text-danger">Questo ingrediente non ha foto</p>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <h5 class="card-title text-center" th:text="${ingredient.name}">Nome Ingrediente</h5>
-                            <div class="text-center">
+                            <div class="d-inline-block me-2">
                                 <a th:href="@{'/ingredient/' + ${ingredient.id}}" class="btn btn-primary">Visualizza</a>
+                            </div>
+                            <div class="d-inline-block">
+                                <form th:action="@{'/admin/deleteIngredient/' + ${ingredient.id}}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo ingrediente?');">
+                                    <button type="submit" class="btn btn-danger">Elimina</button>
+                                </form>
                             </div>
                         </div>
                     </div>
